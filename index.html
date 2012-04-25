@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Shimmy by Xogix</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Shimmy</h1>
+        <p>Titanium Mobile Proxy wrapper that for extending native Titanium Elements, adding Wildcard and Namespaced Event Listeners. Shims for platform independent code Helpers for smarter faster code</p>
+        <p class="view"><a href="https://github.com/Xogix/Shimmy">View the Project on GitHub <small>Xogix/Shimmy</small></a></p>
+        <ul>
+          <li><a href="https://github.com/Xogix/Shimmy/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Xogix/Shimmy/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Xogix/Shimmy">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Getting Started</h2>
+
+<p>Include Shimmy in your Titanium Project. Shimmy comes packaged with Underscore and EventEmitter2 so you can use them as well.</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">shimmy</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'/Shimmy'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">ui</span> <span class="o">=</span> <span class="nx">shimmy</span><span class="p">.</span><span class="nx">UI</span>
+  <span class="p">,</span>  <span class="nx">_</span> <span class="o">=</span> <span class="nx">shimmy</span><span class="p">.</span><span class="nx">_</span><span class="p">;</span>
+</pre>
+</div>
+
+
+<h2>UI</h2>
+
+<h3>Forms</h3>
+
+<p>Create a new Form</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="nx">ui</span><span class="p">.</span><span class="nx">Form</span><span class="p">({</span>
+    <span class="nx">style</span><span class="o">:</span> <span class="s1">'grouped'</span> <span class="c1">//Set Form/Table Style</span>
+  <span class="p">,</span> <span class="nx">fields</span><span class="o">:</span> <span class="p">[</span> <span class="c1">//Input type defaults to textfield</span>
+       <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'Title'</span><span class="p">,</span>   <span class="nx">section</span><span class="o">:</span> <span class="s1">'title'</span><span class="p">,</span>    <span class="nx">hint</span><span class="o">:</span> <span class="s1">'Event Name'</span><span class="p">,</span>        <span class="nx">value</span><span class="o">:</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">id</span><span class="o">:</span><span class="s1">'title'</span> <span class="p">}</span>
+     <span class="p">,</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'Start'</span><span class="p">,</span>   <span class="nx">section</span><span class="o">:</span> <span class="s1">'duration'</span><span class="p">,</span> <span class="nx">hint</span><span class="o">:</span> <span class="s1">'Start Time'</span><span class="p">,</span>        <span class="nx">value</span><span class="o">:</span> <span class="s1">''</span> <span class="p">}</span>
+     <span class="p">,</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'End'</span><span class="p">,</span>     <span class="nx">section</span><span class="o">:</span> <span class="s1">'duration'</span><span class="p">,</span> <span class="nx">hint</span><span class="o">:</span> <span class="s1">'End Time'</span><span class="p">,</span>          <span class="nx">value</span><span class="o">:</span> <span class="s1">''</span> <span class="p">}</span>
+     <span class="p">,</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'Repeat'</span><span class="p">,</span>  <span class="nx">section</span><span class="o">:</span> <span class="s1">'duration'</span><span class="p">,</span> <span class="nx">hint</span><span class="o">:</span> <span class="s1">'Repeat'</span><span class="p">,</span>            <span class="nx">value</span><span class="o">:</span> <span class="s1">''</span> <span class="p">}</span>
+     <span class="p">,</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'Notes'</span><span class="p">,</span>   <span class="nx">section</span><span class="o">:</span> <span class="s1">'notes'</span><span class="p">,</span>    <span class="nx">hint</span><span class="o">:</span> <span class="s1">'Additional Notes'</span><span class="p">,</span>  <span class="nx">value</span><span class="o">:</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span><span class="s1">'textarea'</span> <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Listening for Form Field Events</p>
+
+<div class="highlight">
+<pre><span class="nx">form</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'Title.focus'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span> <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">);</span> <span class="p">});</span>
+<span class="nx">form</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'Title.change'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span> <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">);</span> <span class="p">});</span>
+<span class="nx">form</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'Title.blur'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span> <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">);</span> <span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Batch updates of Form Fields and other field attributes</p>
+
+<div class="highlight">
+<pre><span class="nx">form</span><span class="p">.</span><span class="nx">setValues</span><span class="p">({</span><span class="nx">Title</span><span class="o">:</span><span class="p">{</span> <span class="nx">value</span><span class="o">:</span><span class="s1">'Awesome'</span><span class="p">,</span> <span class="nx">data</span><span class="o">:</span><span class="s1">'HIDDENDATA'</span><span class="p">}</span> <span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Access Individual Form Fields</p>
+
+<div class="highlight">
+<pre><span class="c1">//Field Accessors default to name value if no id is set</span>
+<span class="nx">form</span><span class="p">.</span><span class="nx">fields</span><span class="p">.</span><span class="nx">title</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s1">'newvalue'</span><span class="p">;</span>
+</pre>
+</div>
+
+
+<p>Form Table Proxy Event Listeners</p>
+
+<div class="highlight">
+<pre><span class="nx">form</span><span class="p">.</span><span class="nx">onProxy</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Get Form Values</span>
+  <span class="kd">var</span> <span class="nx">formVals</span> <span class="o">=</span> <span class="nx">form</span><span class="p">.</span><span class="nx">getValues</span><span class="p">();</span>
+
+  <span class="nx">alert</span><span class="p">(</span><span class="nx">formVals</span><span class="p">);</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>TODO</h2>
+
+<ul>
+<li>Finish writing docs</li>
+<li>Add more shims and helpers</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Xogix">Xogix</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
