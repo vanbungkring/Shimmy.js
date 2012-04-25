@@ -35,9 +35,11 @@ var form = ui.Form({
 
 Listening for Form Field Events
 
+```javascript
 form.on('Title.focus', function(e){ alert(e.source); });
 form.on('Title.change', function(e){ alert(e.source); });
 form.on('Title.blur', function(e){ alert(e.source); });
+```
 
 Batch updates of Form Fields and other field attributes
 
