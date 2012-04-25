@@ -6,7 +6,7 @@ Helpers for smarter faster code
 
 ## Getting Started
 
-Included Shimmy in your Titanium Project. Shimmy comes packaged with Underscore and EventEmitter2 so you can use them as well.
+Include Shimmy in your Titanium Project. Shimmy comes packaged with Underscore and EventEmitter2 so you can use them as well.
 
 ```javascript
 var shimmy = require('/Shimmy')
