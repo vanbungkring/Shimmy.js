@@ -1,4 +1,4 @@
-#Shimmy
+# Shimmy.js
 
 Titanium Mobile Proxy wrapper that for extending native Titanium Elements, adding Wildcard and Namespaced Event Listeners.
 Shims for platform independent code
