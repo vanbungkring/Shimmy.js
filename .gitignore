@@ -4,3 +4,4 @@
 .private
 build
 node_modules
+.gitignore

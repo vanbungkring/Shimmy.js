@@ -1,7 +1,7 @@
-exports._ = _ =  require('/lib/underscore');
-exports.EventEmitter2 = EventEmitter2 = require('/lib/EventEmitter2').EventEmitter2;
+var _ = exports._ =  require('/Shimmy/timo_modules/underscore');
+var EventEmitter2 = exports.EventEmitter2 = require('/Shimmy/timo_modules/EventEmitter2').EventEmitter2;
 
-var osname = Ti.Platform.osname;
+var osname = exports.osname = Ti.Platform.osname;
 
 /*
  * Wrapper for Titanium UI components.  This wrapper provides a few pieces of critical
@@ -23,7 +23,9 @@ Shimmy.prototype.constructor = Shimmy;
 
 
 function Shimmy(tiElement) {
-  this.proxy = tiElement;
+  var self = this;
+  self.children = [];
+  self.proxy = tiElement;
 }
 
 //Wrappers for common Titanium view construction functions
@@ -32,10 +34,13 @@ Shimmy.prototype.add = function(tiChildView) {
   if('array' === typeof tiChildView) {
     for(var x = 0; x < tiChildView.length; x++){
       v = tiChildView[x].proxy||tiChildView[x];
+      tiChildView[x]._parent = this;
       this.proxy.add(v);
     }
   } else {
     v = tiChildView.proxy||tiChildView;
+    v._parent = this;
+      tiChildView._parent = this;
     this.proxy.add(v);
   }
   return this;
@@ -127,7 +132,17 @@ function ui(tiElement, args){
     self = (args && args.platform) ? Ti.UI[args.platform]['create'+tiElement](args||{}) : Ti.UI['create'+tiElement](args||{});
   }
 
-  return new Shimmy(self);
+  var shimmyObject = new Shimmy(self);
+
+  var _v = (args && args.valueField) ? args.valueField : 'value';
+
+  Object.defineProperty(shimmyObject, 'value', {
+      get : function() { return shimmyObject.proxy.value; }
+    , set : function(val) { this.value = fshimmyObject.proxy.value = val; }
+    , configurable: true
+  });
+
+  return shimmyObject;
 }
 
 ui.Button = function (params) {
@@ -170,117 +185,19 @@ ui.EmailDialog = function(params) {
   return self;
 };
 
-ui.Form = function(params,cb) {
-  //Table Styles short names
-  var styles = {
-      grouped: Titanium.UI.iPhone.TableViewStyle.GROUPED
-    , 'undefined': undefined
-  };
-
-  var fieldParams = params.fields
-    , fields = {}
-    , sections = [];
-
-    fieldParams = _.groupBy(params.fields, function(fld){ return fld.section; });
-
-    _.each(fieldParams, function(sec, key){
-      //Create Form Section
-      var _s = Ti.UI.createTableViewSection({name:key});
-
-      _.each(sec, function(fld){
-        var input
-          , row = Ti.UI.createTableViewRow({title:fld.name, backgroundColor:'#ececec', height:50});
-          row._parent = _s;
-
-        switch(fld.type){
-
-          case 'textarea':
-            row.height = 100;
-            input = Ti.UI.createTextArea({left:80, right:0,height:90, backgroundColor:'Transparent', name:fld.name, value:fld.value,hintText:fld.hint});
-            break;
-          //
-          case 'texfield':
-            input = Ti.UI.createTextField({left:80, right:0,height:50, name:fld.name,value:fld.value,hintText:fld.hint});
-            break;
-
-          default:
-            input = Ti.UI.createTextField({left:80, right:0,height:50, name:fld.name,value:fld.value,hintText:fld.hint});
-            break;
-        }
-        //Add form field and add row to section
-        row.add(input);
-
-        input._parent = row;
-        fields[fld.id||fld.name] = input;
-        _s.add(row);
-
-        // Form Field Event Listeners
-        input.addEventListener('focus', function(e) { self.emit((fld.id||fld.name)+'.focus', e);});
-        input.addEventListener('change', function(e) { self.emit((fld.id||fld.name)+'.change',e); });
-        input.addEventListener('blur', function(e) { self.emit((fld.id||fld.name)+'.blur',e); });
-      });
-      //Add section to form data array
-      sections.push(_s);
-      if (cb) cb(_s);
-    });
-
-  var self = ui('TableView',{
-      backgroundColor:'Transparent'
-    , data: sections
-    , style: styles[params.style]
-  });
-  self.fields = fields;
-  self.isEditable = true;
-
-  self.setValues = function(values) {
-    for(var key in values){
-      if('object' === typeof values){
-        var fieldValues = values[key];
-        for(var fieldKey in fieldValues) {
-          Ti.API.info(fieldValues[fieldKey]);
-          self.fields[key][fieldKey] = fieldValues[fieldKey];
-        }
-      } else {
-        self.fields[key].value = values[key];
-      }
-    }
-  };
-
-  self.editable = function(isEditable) {
-    self.isEditable = isEditable;
-    self.emit('mode.changed', { editable: isEditable });
-    _.each(self.fields, function(field) {
-      field.editable = isEditable;
-      field.color = (isEditable) ? '#000000' : '#555555';
-      field.enabled = isEditable;
-
-    });
-  };
-
-  self.on('mode.change', function(e) {
-    self.editable(e.editable);
-  });
-
-  self.getValues = function() {
-    var vals = {};
-    _.each(self.fields, function(field, key) {
-      // Retrieves data field if set.
-      // This is good if you only use the value for user display
-      vals[key] = field.data||field.value;
-    });
-    return vals;
-  };
-
-  return self;
-};
-
-
 ui.Image = function(params) {
   var self = ui('ImageView',  _.extend({
     height:Ti.UI.SIZE,
-    width:Ti.UI.SIZE
+    width:Ti.UI.SIZE,
+    valueField:'image'
   },params||{}));
 
+  Object.defineProperty(self, 'value', {
+      get : function() { return this.proxy.image; }
+    , set : function(val) { self.proxy.image = val; }
+  });
+
+  self.value = params.image;
   return self;
 };
 
@@ -424,10 +341,10 @@ ui.Window = function(params) {
           self.proxy[x+'NavButton'] = self[x+'NavButton'].proxy;
           break;
         default:
-          Ti.API.error('Invalid type passed to ui.Window.NavButtons');
           break;
       }
    }
+    // Return self to allow for chaining
     return self;
   };
 
