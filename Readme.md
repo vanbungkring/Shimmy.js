@@ -16,6 +16,10 @@ var shimmy = require('/Shimmy')
 
 ## UI
 
+Docs coming soon ...
+
+## Plugins
+
 ### Forms
 
 Create a new Form
