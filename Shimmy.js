@@ -1,5 +1,5 @@
-var _ = exports._ =  require('/Shimmy/timo_modules/underscore');
-var EventEmitter2 = exports.EventEmitter2 = require('/Shimmy/timo_modules/EventEmitter2').EventEmitter2;
+var _ = exports._ =  require('/lib/underscore');
+var EventEmitter2 = exports.EventEmitter2 = require('/lib/EventEmitter2').EventEmitter2;
 
 var osname = exports.osname = Ti.Platform.osname;
 
@@ -138,7 +138,7 @@ function ui(tiElement, args){
 
   Object.defineProperty(shimmyObject, 'value', {
       get : function() { return shimmyObject.proxy.value; }
-    , set : function(val) { this.value = fshimmyObject.proxy.value = val; }
+    , set : function(val) { this.value = shimmyObject.proxy.value = val; }
     , configurable: true
   });
 
@@ -222,8 +222,14 @@ ui.NavGroup = function(params) {
   var self = ui('NavigationGroup',params);
 
   self.open = function(win, params) {
+    win._parent = self;
     self.proxy.open(win.proxy,params);
   };
+
+  self.close = function(win, params) {
+    self.proxy.close(win.proxy,params);
+  };
+
   return self;
 };
 

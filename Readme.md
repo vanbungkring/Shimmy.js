@@ -25,6 +25,9 @@ Docs coming soon ...
 Create a new Form
 
 ```javascript
+
+require('/Shimmy_Forms')(shimmy);
+
 var form = ui.Form({
     style: 'grouped' //Set Form/Table Style
   , fields: [ //Input type defaults to textfield

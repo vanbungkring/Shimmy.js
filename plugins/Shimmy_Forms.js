@@ -43,6 +43,31 @@ module.exports = function(Shimmy) {
             case 'texfield':
               input = ui.TextField({left:leftMargin, right:0,height:50, id:fieldID ,value:fld.value,hintText:fld.hint});
               break;
+            case 'picker':
+              input = ui.TextField({left:leftMargin, right:0,height:50, id:fieldID ,value:fld.value,hintText:fld.hint});
+              input.onProxy('focus', function(e){ input.proxy.blur();
+
+                 var pwin = ui.View({top:0,bottom:0,left:0,right:0, value: new Date()});
+
+                 var picker = Ti.UI.createPicker({
+                    type:Ti.UI.PICKER_TYPE_DATE_AND_TIME,
+                    minDate:new Date(),
+                    bottom:0
+                  });
+                 pwin.add(picker);
+
+                 picker.addEventListener('change', function(pkr){
+                  pwin.value = pkr.value;
+                 });
+
+                 pwin.onProxy('singletap', function() {
+                  e.source.value = pwin.value;
+                  self._parent.remove(pwin);
+                  pwin.release();
+                 });
+                 self._parent.add(pwin);
+               });
+              break;
             default:
               input = ui.TextField({left:leftMargin, right:0,height:50, id:fieldID ,value:fld.value,hintText:fld.hint});
               break;
@@ -54,6 +79,7 @@ module.exports = function(Shimmy) {
             var childFieldID = (child.id||child.name);
             fields[childFieldID] = child;
             // Form Field Event Listeners
+
             child.addEventListener('focus',  function(e) { self.emit( childFieldID+'.focus',  e); });
             child.addEventListener('change', function(e) { self.emit( childFieldID+'.change', e); });
             child.addEventListener('blur',   function(e) { self.emit( childFieldID+'.blur',   e); });
@@ -77,7 +103,12 @@ module.exports = function(Shimmy) {
       });
 
     var self = ui.Table({
-        backgroundColor:'Transparent'
+        backgroundColor:params.backgroundColor||'Transparent'
+      , top: params.top
+      , bottom: params.bottom
+      , height:params.height
+      , width:params.width
+      , backgroundImage:params.backgroundImage
       , data: sectionProxys
       , style: style[params.style]
     });
