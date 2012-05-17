@@ -6,17 +6,16 @@ Helpers for smarter faster code
 
 ## Getting Started
 
-Include Shimmy in your Titanium Project. Shimmy comes packaged with Underscore and EventEmitter2 so you can use them as well.
+Include Shimmy in your Titanium Project. Shimmy comes packaged with EventEmitter2 for added event handling.
 
 ```javascript
-var shimmy = require('/Shimmy')
-  , ui = shimmy.UI
-  ,  _ = shimmy._;
+var Shimmy = require('/Shimmy')
+  , ui = Shimmy.UI;
 ```
 
 ## UI
 
-Docs coming soon ...
+SEE SOURCE CODE ...
 
 ## Plugins
 
@@ -26,7 +25,7 @@ Create a new Form
 
 ```javascript
 
-require('/Shimmy_Forms')(shimmy);
+require('/Shimmy_Forms')(Shimmy);
 
 var form = ui.Form({
     style: 'grouped' //Set Form/Table Style

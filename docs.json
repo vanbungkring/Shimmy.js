@@ -1,0 +1,488 @@
+[
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Shimmy.js<br />Copyright (c) 2012 Christian Sullivan <a href=\"&#x6D;&#97;&#x69;&#x6C;&#116;&#x6F;:&#99;&#x73;&#64;&#x65;&#117;&#x66;&#111;&#114;&#x69;&#x63;&#46;c&#x6F;\">&#99;&#x73;&#64;&#x65;&#117;&#x66;&#111;&#114;&#x69;&#x63;&#46;c&#x6F;</a><br />MIT Licensed</p>",
+      "summary": "<p>Shimmy.js<br />Copyright (c) 2012 Christian Sullivan <a href=\"&#x6D;&#x61;i&#x6C;&#116;&#111;:&#99;&#x73;&#64;&#101;&#x75;&#102;&#111;&#114;&#105;&#99;&#x2E;&#x63;&#111;\">&#99;&#x73;&#64;&#101;&#x75;&#102;&#111;&#114;&#105;&#99;&#x2E;&#x63;&#111;</a><br />MIT Licensed</p>",
+      "body": ""
+    },
+    "ignore": true,
+    "code": "var EventEmitter2 = exports.EventEmitter2 = require('/lib/EventEmitter2').EventEmitter2;",
+    "ctx": {
+      "type": "declaration",
+      "name": "EventEmitter2",
+      "value": "exports.EventEmitter2 = require('/lib/EventEmitter2').EventEmitter2",
+      "string": "EventEmitter2"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Helper functions pulled from Underscore.js<br />Feel free to remove this and just include underscore.js if you want</p>",
+      "summary": "<p>Helper functions pulled from Underscore.js<br />Feel free to remove this and just include underscore.js if you want</p>",
+      "body": ""
+    },
+    "ignore": false,
+    "code": "var _ = {};\n\n  // Is a given value an array?\n  var nativeIsArray = Array.isArray;\n  _.isArray = nativeIsArray || function(obj) {\n    return toString.call(obj) == '[object Array]';\n  };\n\n    // Extend a given object with all the properties in passed-in object(s).\n  _.extend = function(obj) {\n    each(slice.call(arguments, 1), function(source) {\n      for (var prop in source) {\n        obj[prop] = source[prop];\n      }\n    });\n    return obj;\n  };",
+    "ctx": {
+      "type": "declaration",
+      "name": "_",
+      "value": "{}",
+      "string": "_"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Wrapper for Titanium UI components.  This wrapper provides a few pieces of critical<br />functionality, currently missing from Titanium UI objects:<br />- The ability to safely extend components with new members<br />- Rudimentary resource management and object lifecycle handling<br />Extended and modified from Shimmys in the Ti Community app</p>",
+      "summary": "<p>Wrapper for Titanium UI components.  This wrapper provides a few pieces of critical<br />functionality, currently missing from Titanium UI objects:<br />- The ability to safely extend components with new members<br />- Rudimentary resource management and object lifecycle handling<br />Extended and modified from Shimmys in the Ti Community app</p>",
+      "body": ""
+    },
+    "ignore": false,
+    "code": "exports.version = '0.1.0';\n\nvar osname = exports.osname = Ti.Platform.osname;",
+    "ctx": {
+      "type": "property",
+      "receiver": "exports",
+      "name": "version",
+      "value": "'0.1.0'",
+      "string": "exports.version"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Inherit from <code>EventEmitter2.prototype</code>.<br />not required but adds more event listener functionalities</p>",
+      "summary": "<p>Inherit from <code>EventEmitter2.prototype</code>.<br />not required but adds more event listener functionalities</p>",
+      "body": ""
+    },
+    "ignore": false,
+    "code": "Shimmy.prototype = new EventEmitter2({ wildcard: true, maxListeners: 20 });\nShimmy.prototype.constructor = Shimmy;",
+    "ctx": {
+      "type": "property",
+      "receiver": "Shimmy",
+      "name": "prototype",
+      "value": "new EventEmitter2({ wildcard: true, maxListeners: 20 })",
+      "string": "Shimmy.prototype"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Creates Shimmy Object that wraps native titanium object</p>\n\n<p>@param {Object} Ti.Proxy Obj<br /> @api public</p>",
+      "summary": "<p>Creates Shimmy Object that wraps native titanium object</p>",
+      "body": "<p>@param {Object} Ti.Proxy Obj<br /> @api public</p>"
+    },
+    "ignore": false,
+    "code": "function Shimmy(tiElement) {\n  var self = this;\n  self.children = [];\n  self.proxy = tiElement;\n}",
+    "ctx": {
+      "type": "function",
+      "name": "Shimmy",
+      "string": "Shimmy()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Mixed"
+        ],
+        "name": "params",
+        "description": "String or object { key:'YourObjectKey', value:'ProxysKey' }"
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Mapper - Creates getter and setter mapped to proxy object</p>",
+      "summary": "<p>Mapper - Creates getter and setter mapped to proxy object</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.mapper = function(params) {\n  var self = this;\n\n  if(!params.length) return Ti.API.error('No parameters provided to Shimmy.proxyProperties');\n\n  //Cycle through properties and create getters and setters\n  function next(i) {\n    Object.defineProperty(self, params[i].key||params[i],{\n      get: function() {\n        return self.proxy[params[i].value||params[i]];\n      },\n      set: function(value) {\n        self.proxy[params[i].value||params[i]] = value;\n      }\n    });\n    if(i < (params.length -1)) return next(i+1);\n  }\n  next(0);\n  return self;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "mapper",
+      "string": "Shimmy.prototype.mapper()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Mixed"
+        ],
+        "name": "Shimmy",
+        "description": "Object || Ti.Proxy Object || An Array mixed with either"
+      }
+    ],
+    "description": {
+      "full": "<p>Adds child elements to parent proxy element</p>",
+      "summary": "<p>Adds child elements to parent proxy element</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.add = function(tiChildView) {\n  var v;\n  if(_.isArray(tiChildView)) {\n    for(var x = 0; x < tiChildView.length; x++){\n      tiChildView._parent = this;\n      v = tiChildView[x].proxy||tiChildView[x];\n      v._parent = this;\n      this.proxy.add(v);\n    }\n  } else {\n    tiChildView._parent = this;\n    v = tiChildView.proxy||tiChildView;\n    v._parent = this;\n    this.proxy.add(v);\n  }\n  return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "add",
+      "string": "Shimmy.prototype.add()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "Ti.Proxy",
+        "description": "Object || Shimmy Object"
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Remove a child object from its parent</p>",
+      "summary": "<p>Remove a child object from its parent</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.remove = function(tiChildView) {\n  var v = tiChildView.proxy||tiChildView;\n  this.proxy.remove(v);\n  tiChildView.proxy = null;\n  tiChildView = null;\n  return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "remove",
+      "string": "Shimmy.prototype.remove()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "Arguments",
+        "description": "to pass to open function"
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Open||Shows Proxy element if it has the ability</p>",
+      "summary": "<p>Open||Shows Proxy element if it has the ability</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.open = function(args) {\n  if (this.proxy.open) {\n    this.proxy.open(args||{});\n  } else {\n    this.proxy.show();\n  }\n  return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "open",
+      "string": "Shimmy.prototype.open()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "Arguments",
+        "description": "to pass to open function"
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Close Proxy element if it has the ability</p>",
+      "summary": "<p>Close Proxy element if it has the ability</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.close = function(args) {\n  if (this.proxy.close) {\n    this.proxy.close(args||{});\n  } else {\n    this.proxy.hide();\n  }\n  return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "close",
+      "string": "Shimmy.prototype.close()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "Arguments",
+        "description": "to pass to open function"
+      },
+      {
+        "type": "param",
+        "types": [
+          "Function"
+        ],
+        "name": "callback",
+        "description": ""
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Animate Proxy element if it has the ability</p>",
+      "summary": "<p>Animate Proxy element if it has the ability</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.animate = function(args,cb) {\n  this.proxy.animate(args,cb||function(){});\n  return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "animate",
+      "string": "Shimmy.prototype.animate()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "Arguments",
+        "description": "to pass to open function"
+      },
+      {
+        "type": "param",
+        "types": [
+          "Function"
+        ],
+        "name": "Callback",
+        "description": ""
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Update Proxy element layout parameters if it has the ability</p>",
+      "summary": "<p>Update Proxy element layout parameters if it has the ability</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.updateLayout = function(args, cb) {\n  this.proxy.updateLayout(args);\n  return this;\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "updateLayout",
+      "string": "Shimmy.prototype.updateLayout()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "String"
+        ],
+        "name": "Event",
+        "description": "type"
+      },
+      {
+        "type": "param",
+        "types": [
+          "Function"
+        ],
+        "name": "Callback",
+        "description": ""
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Add Proxy element native listener if it has the ability</p>",
+      "summary": "<p>Add Proxy element native listener if it has the ability</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.onProxy = function(event,callback) {\n  switch (event) {\n    case 'location':\n      this.globalHandlers.location = callback;\n      Ti.Geolocation.addEventListener('location', this.globalHandlers.location);\n      break;\n    case 'orientationchange':\n      this.globalHandlers.orientationchange = callback;\n      Ti.Gesture.addEventListener('orientationchange', this.globalHandlers.orientationchange);\n      break;\n    default:\n      this.proxy.addEventListener(event,callback);\n      break;\n  }\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "onProxy",
+      "string": "Shimmy.prototype.onProxy()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "String"
+        ],
+        "name": "Event",
+        "description": "type"
+      },
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "data",
+        "description": "to pass"
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "self"
+      }
+    ],
+    "description": {
+      "full": "<p>Emit Proxy element native emitter if it has the ability</p>",
+      "summary": "<p>Emit Proxy element native emitter if it has the ability</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "Shimmy.prototype.emitProxy = function(event,data) {\n  this.proxy.fireEvent(event,data||{});\n};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "emitProxy",
+      "string": "Shimmy.prototype.emitProxy()"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Function to execute on element being destroyed<br />This should be overridden by any Shimmys which wish to execute custom<br />clean up logic, to release their child components, etc.</p>",
+      "summary": "<p>Function to execute on element being destroyed<br />This should be overridden by any Shimmys which wish to execute custom<br />clean up logic, to release their child components, etc.</p>",
+      "body": ""
+    },
+    "ignore": false,
+    "code": "Shimmy.prototype.onDestroy = function() {};",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "onDestroy",
+      "string": "Shimmy.prototype.onDestroy()"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Release Ti.Proxy element and Deallocate reserved memory for object</p>",
+      "summary": "<p>Release Ti.Proxy element and Deallocate reserved memory for object</p>",
+      "body": ""
+    },
+    "ignore": false,
+    "code": "Shimmy.prototype.release = function() {\n  //force cleanup on proxy\n  if(this._parent) this._parent.remove(this);\n  this.proxy = null;\n\n  //run custom cleanup logic\n  this.onDestroy();\n};\n\n\n// Custom UI Shimmy Objects",
+    "ctx": {
+      "type": "method",
+      "constructor": "Shimmy",
+      "name": "release",
+      "string": "Shimmy.prototype.release()"
+    }
+  },
+  {
+    "tags": [
+      {
+        "type": "param",
+        "types": [
+          "Ti.Proxy",
+          "",
+          "String"
+        ],
+        "name": "Proxy",
+        "description": "Object"
+      },
+      {
+        "type": "param",
+        "types": [
+          "Object"
+        ],
+        "name": "parameters",
+        "description": "to initialize with"
+      },
+      {
+        "type": "return",
+        "types": [
+          "Object"
+        ],
+        "description": "Shimmy Object"
+      }
+    ],
+    "description": {
+      "full": "<p>Shimmy UI Element</p>",
+      "summary": "<p>Shimmy UI Element</p>",
+      "body": ""
+    },
+    "isPrivate": false,
+    "ignore": false,
+    "code": "function ui(tiElement, args){\n  var self;\n\n  if ('string' !== typeof tiElement) {\n    //If Shimmy is passed a Titanium Object\n    self = tiElement(args);\n  } else {\n    //Build Titanium Proxy Object Creation Call\n    var tiobject = (args && args.platform) ? Ti.UI[args.platform]['create'+tiElement] : Ti.UI['create'+tiElement];\n    self = tiobject(args||{});\n  }\n  var shimmyObject = new Shimmy(self);\n\n  return shimmyObject;\n}\n\nui.Button = function (params) {\n  var properties = ['top','bottom','left','right','height','width','color','font','title'];\n  var self = ui('Button', params).mapper(properties);\n  return self;\n};\n\nui.ButtonBar = function(params) {\n  var self = ui('View', params);\n  return self;\n};\n\nui.CoverFlow = function(params) {\n  var self = ui('CoverFlowView', params);\n  return self;\n};\n\nui.DashIcon = function(params) {\n  var self = ui('DashboardItem', params);\n  return self;\n};\n\nui.DashBoard = function(params) {\n  var self = ui('DashboardView', params);\n  return self;\n};\n\nui.EmailDialog = function(params) {\n  var self = ui('EmailDialog', params);\n  return self;\n};\n\nui.Image = function(params) {\n  var properties = ['top','bottom','left','right','height','width','color','image','visible',{key:'value', value:'image'}];\n  var self = ui('ImageView',  _.extend({\n    height:Ti.UI.SIZE,\n    width:Ti.UI.SIZE\n  },params||{})).mapper(properties);\n\n  return self;\n};\n\nui.Label = function(params) {\n  var properties = ['top','bottom','left','right','height','width','color','font','text','visible'];\n  var self = ui('Label',_.extend({\n    text:params.text,\n    color:'#000',\n    height:20,\n    width:Ti.UI.SIZE,\n    font: {\n      fontFamily: (osname === 'android') ? 'Droid Sans' : 'Helvetica Neue',\n      fontSize: 14\n    }\n  },params||{})).mapper(properties);\n\n  return self;\n};\n\nui.Map = function(params) {\n  var self = ui(Ti.Map.createView,params);\n  return self;\n};\n\nui.NavGroup = function(params) {\n  //Hard coded platform until Android and Mobile Web NavigationGroup shim is made\n  params.platform = 'iPhone';\n  params.window = params.window.proxy;\n  var self = ui('NavigationGroup',params);\n\n  self.open = function(win, params) {\n    win.navGroup = self;\n    win._parent = params.parent;\n    win._data = params;\n    self.proxy.open(win.proxy,{animate:true});\n  };\n\n  self.close = function(win, params) {\n    self.proxy.close(win.proxy,params);\n  };\n\n  return self;\n};\n\nui.OptionDialog = function(params) {\n  var self = ui('OptionDialog', params);\n\n  self.show = function(){\n    self.proxy.show();\n  };\n\n  return self;\n};\n\nui.Picker = function(params) {\n  var self = ui('Picker', params);\n  return self;\n};\n\nui.Row = function(params) {\n  var self = ui('TableViewRow', params);\n  return self;\n};\n\nui.ScrollableView = function(params) {\n  var self = ui('OptionDialog', params);\n  return self;\n};\n\nui.ScrollView = function(params) {\n  var self = ui('ScrollView', params);\n  return self;\n};\n\nui.TabGroup = function(params) {\n  var tabs = params.tabs;\n\n  delete params.tabs;\n\n  var self = ui('TabGroup', params);\n\n  function next(i) {\n    var tab = Ti.UI.createTab({\n        icon:tabs[i].icon,\n        title:tabs[i].title,\n        window: tabs[i].window\n    });\n    self.proxy.addTab(tab);\n    if (i < tabs.length -1) next(i+1);\n  }\n  next(0);\n\n  return self;\n};\n\nui.Table = function(args) {\n  var properties = ['top','bottom','left','right','height','width','visible','data'];\n\n  var dataRows = [];\n\n  if(args.data) {\n    dataRows  = args.data;\n    delete args.data;\n  }\n\n  var self = ui('TableView', args);\n\n  // Modified Setter To allow for adding table rows that may be Shimmy objects\n  Object.defineProperty(self, 'data',{\n    get: function() {\n      return data;\n    },\n    set: function(value) {\n      var v = [];\n      for(var x = 0; x < value.length; x++){\n        v.push(value[x].proxy||value[x]);\n      }\n      self.proxy.data = v;\n    }\n  });\n\n  self.data = dataRows;\n\n  //Helper functions\n  self.empty = function() {\n    self.proxy.setData();\n    return self;\n  };\n\n  self.setData = function(tiChildRow) {\n    var v = [];\n    for(var x = 0; x < tiChildRow.length; x++){\n      v.push(tiChildRow[x].proxy||tiChildRow[x]);\n    }\n    self.proxy.data = v;\n    return self;\n  };\n\n  self.appendRow = function(row) {\n    var r = row.proxy||row;\n    self.proxy.appendRow(r);\n    return self;\n  };\n\n  return self;\n};\n\nui.TableSection = function(params) {\n  var self = ui('TableViewSection', params);\n  return self;\n};\n\nui.TextArea = function(params) {\n  var properties = ['top','bottom','left','right','height','width','value','data'];\n  var self = ui('TextArea', params).mapper(properties);\n  return self;\n};\n\nui.TextField = function(params) {\n  var properties = ['top','bottom','left','right','height','width','value','data'];\n  var self = ui('TextField', params).mapper(properties);\n  return self;\n};\n\nui.Toolbar = function(params) {\n  var self = ui('Toolbar', params);\n  return self;\n};\n\nui.View = function(params) {\n  var properties = ['top','bottom','left','right','height','width','backgroundImage', 'layout', 'children','visible'];\n  var self = ui('View', params).mapper(properties);\n  return self;\n};\n\nui.WebView = function(params) {\n  var self = ui('WebView', params);\n  return self;\n};\n\nui.Window = function(params) {\n  var properties = ['top','bottom','left','right','height','width','backgroundImage','children'];\n  var self = ui('Window', params).mapper(properties);\n\n  self.NavButtons = function(params) {\n   for(var x in params){\n      switch(typeof params[x]) {\n        case 'string':\n        case 'number':\n          self[x+'NavButton'] = ui.Button({title:params[x]});\n          self.proxy[x+'NavButton'] = self[x+'NavButton'].proxy;\n          break;\n        case 'object':\n          self[x+'NavButton'] = params[x];\n          self.proxy[x+'NavButton'] = self[x+'NavButton'].proxy;\n          break;\n        default:\n          break;\n      }\n   }\n    return self;\n  };\n\n  return self;\n};\n\nexports.UI = ui;",
+    "ctx": {
+      "type": "function",
+      "name": "ui",
+      "string": "ui()"
+    }
+  },
+  {
+    "tags": [],
+    "description": {
+      "full": "<p>Titanium includes the required modules for your project by grep ing the source code for each<br />library usage. Since we are dynamically creating these we need to just include the names so<br />titanium knows to include the required libraries</p>\n\n<p>Add all modules that you use in Shimmy<br /> var used = [Titanium.UI.createLabel, Titanium.UI.createWebView, Ti.Platform.locale ,<br /> Ti.UI.createWindow, Ti.UI.createLabel, Ti.UI.createView,<br /> Ti.UI.createTableView, Ti.UI.createTableViewRow, Ti.UI.createTableViewSection,<br /> Ti.UI.createButton, Ti.UI.createButton, Ti.UI.createImageView, Ti.UI.createTextField,<br /> Ti.UI.createTextArea, Ti.UI.iPhone.NavigationGroup, Ti.UI.createPicker, Ti.UI.createPickerRow,<br /> Ti.UI.iPhone.SystemButtonStyle, Ti.UI.createOptionDialog, Ti.Facebook, Ti.Contacts];</p>",
+      "summary": "<p>Titanium includes the required modules for your project by grep ing the source code for each<br />library usage. Since we are dynamically creating these we need to just include the names so<br />titanium knows to include the required libraries</p>",
+      "body": "<p>Add all modules that you use in Shimmy<br /> var used = [Titanium.UI.createLabel, Titanium.UI.createWebView, Ti.Platform.locale ,<br /> Ti.UI.createWindow, Ti.UI.createLabel, Ti.UI.createView,<br /> Ti.UI.createTableView, Ti.UI.createTableViewRow, Ti.UI.createTableViewSection,<br /> Ti.UI.createButton, Ti.UI.createButton, Ti.UI.createImageView, Ti.UI.createTextField,<br /> Ti.UI.createTextArea, Ti.UI.iPhone.NavigationGroup, Ti.UI.createPicker, Ti.UI.createPickerRow,<br /> Ti.UI.iPhone.SystemButtonStyle, Ti.UI.createOptionDialog, Ti.Facebook, Ti.Contacts];</p>"
+    },
+    "ignore": false
+  }
+]
